@@ -66,6 +66,10 @@ class MarkGPTConfig:
     # GPT-2 uses bias=True; more recent models often use bias=False.
     bias: bool = True
     
+    # Use Flash Attention if available (PyTorch 2.0+, CUDA).
+    # When False, uses manual attention computation. Useful for debugging/development.
+    use_flash_attn: bool = True
+    
     @property
     def head_size(self) -> int:
         """Dimension of each attention head. Must be an integer."""
@@ -90,7 +94,7 @@ class MarkGPTConfig:
 
 class CausalSelfAttention(nn.Module):
     """
-    Multi-head causal (masked) self-attention.
+    Multi-head causal (masked) self-attention with optional Flash Attention support.
     
     The "self" in self-attention means: each token attends to ALL other tokens
     in the same sequence (including itself).
@@ -104,9 +108,16 @@ class CausalSelfAttention(nn.Module):
     n_embd dimensions, we split into n_head parallel attention computations,
     each with head_size dimensions. Each head can specialize in different
     relationship types (syntax, coreference, semantics, etc.)
+    
+    Flash Attention (Dao et al., 2022) offers 2-4x speedups on modern GPUs by:
+    - Computing attention in blocks to reduce memory I/O
+    - Recomputing attention instead of storing all intermediate values
+    - Using specialized CUDA kernels optimized for GPUs
+    
+    Requires: PyTorch >= 2.0 and CUDA (falls back to manual implementation otherwise)
     """
     
-    def __init__(self, config: MarkGPTConfig):
+    def __init__(self, config: MarkGPTConfig, use_flash_attn: bool = True):
         super().__init__()
         self.config = config
         
@@ -126,18 +137,42 @@ class CausalSelfAttention(nn.Module):
         self.n_embd = config.n_embd
         self.dropout = config.dropout
         
+        # Flash Attention support: use if available (PyTorch 2.0+, CUDA)
+        self.use_flash_attn = use_flash_attn and self._can_use_flash_attn()
+        
         # The causal mask: a lower-triangular matrix of 1s.
         # We register it as a buffer so it moves with the model (CPU ↔ GPU)
         # without being a trainable parameter.
+        # NOT needed if using Flash Attention, but kept for manual computation
         self.register_buffer(
             "mask",
             torch.tril(torch.ones(config.block_size, config.block_size))
             .view(1, 1, config.block_size, config.block_size)
         )
     
+    @staticmethod
+    def _can_use_flash_attn() -> bool:
+        """Check if Flash Attention is available (PyTorch 2.0+ and CUDA).
+        
+        Returns:
+            True if Flash Attention can be used, False otherwise
+        """
+        try:
+            # Try to access scaled_dot_product_attention (available in PyTorch 2.0+)
+            _ = F.scaled_dot_product_attention
+            # Check CUDA availability
+            if torch.cuda.is_available():
+                return True
+        except AttributeError:
+            pass
+        return False
+    
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
         Forward pass through causal self-attention.
+        
+        Uses Flash Attention if available for 2-4x speedups, otherwise falls back
+        to manually implemented attention.
         
         Args:
             x: Input tensor of shape (batch_size, seq_len, n_embd)
@@ -163,39 +198,66 @@ class CausalSelfAttention(nn.Module):
         k = k.view(B, T, self.n_head, head_size).transpose(1, 2)  # (B, nh, T, hs)
         v = v.view(B, T, self.n_head, head_size).transpose(1, 2)  # (B, nh, T, hs)
         
-        # ── Step 3: Compute scaled dot-product attention ────────────────────
-        # Attention score matrix: Q @ K^T, scaled by 1/sqrt(head_size)
-        # Why scale? If head_size is large, dot products grow large, pushing
-        # softmax into saturated regions with near-zero gradients.
-        # Shape: (B, n_head, T, T) — for each head and each position,
-        # a score for how much to attend to every other position.
-        scale = 1.0 / math.sqrt(head_size)
-        attn = (q @ k.transpose(-2, -1)) * scale  # (B, nh, T, T)
+        # ── Step 3: Compute attention (Flash or manual) ─────────────────────
+        if self.use_flash_attn:
+            # Flash Attention: use optimized PyTorch 2.0 implementation
+            # Note: scaled_dot_product_attention uses batch_first=False layout
+            # (B, n_head, T, head_size), which matches our format
+            attn_output = F.scaled_dot_product_attention(
+                q, k, v,
+                attn_mask=None,  # We use dropout_p for masking, not attn_mask
+                dropout_p=self.dropout if self.training else 0.0,
+                is_causal=True,  # Enables causal masking automatically
+                scale=1.0 / math.sqrt(head_size)
+            )
+            out = attn_output  # (B, n_head, T, head_size)
+        else:
+            # Manual attention computation with causal mask
+            # Attention score matrix: Q @ K^T, scaled by 1/sqrt(head_size)
+            # Why scale? If head_size is large, dot products grow large, pushing
+            # softmax into saturated regions with near-zero gradients.
+            # Shape: (B, n_head, T, T) — for each head and each position,
+            # a score for how much to attend to every other position.
+            scale = 1.0 / math.sqrt(head_size)
+            attn = (q @ k.transpose(-2, -1)) * scale  # (B, nh, T, T)
+            
+            # Apply the causal mask
+            # Wherever the mask is 0 (upper triangle = "future" positions),
+            # we set the attention score to -infinity, so softmax will give 0 weight.
+            attn = attn.masked_fill(self.mask[:, :, :T, :T] == 0, float('-inf'))
+            
+            # Softmax + dropout
+            # Softmax converts scores to probabilities (summing to 1 over each row).
+            # After this, each row of attn tells us: "for token i, how much do I
+            # attend to each of tokens 0..i?"
+            attn = F.softmax(attn, dim=-1)
+            attn = self.attn_dropout(attn)
+            
+            # Weighted sum of Values
+            # The final output for each token is a weighted average of all value vectors,
+            # weighted by the attention probabilities.
+            out = attn @ v  # (B, nh, T, hs)
         
-        # ── Step 4: Apply the causal mask ───────────────────────────────────
-        # Wherever the mask is 0 (upper triangle = "future" positions),
-        # we set the attention score to -infinity, so softmax will give 0 weight.
-        attn = attn.masked_fill(self.mask[:, :, :T, :T] == 0, float('-inf'))
-        
-        # ── Step 5: Softmax + dropout ────────────────────────────────────────
-        # Softmax converts scores to probabilities (summing to 1 over each row).
-        # After this, each row of attn tells us: "for token i, how much do I
-        # attend to each of tokens 0..i?"
-        attn = F.softmax(attn, dim=-1)
-        attn = self.attn_dropout(attn)
-        
-        # ── Step 6: Weighted sum of Values ──────────────────────────────────
-        # The final output for each token is a weighted average of all value vectors,
-        # weighted by the attention probabilities.
-        out = attn @ v  # (B, nh, T, hs)
-        
-        # ── Step 7: Concatenate heads and project ───────────────────────────
+        # ── Step 4: Concatenate heads and project ───────────────────────────
         # Reshape back to (B, T, C) and apply the output projection.
         out = out.transpose(1, 2).contiguous().view(B, T, C)  # (B, T, C)
         out = self.c_proj(out)
         out = self.resid_dropout(out)
         
         return out
+    
+    def get_attention_info(self) -> dict:
+        """Return information about attention configuration for logging/analysis.
+        
+        Returns:
+            Dictionary with attention settings
+        """
+        return {
+            "using_flash_attention": self.use_flash_attn,
+            "n_heads": self.n_head,
+            "head_size": self.n_embd // self.n_head,
+            "can_use_flash_attn": self._can_use_flash_attn(),
+        }
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -259,7 +321,7 @@ class TransformerBlock(nn.Module):
         # Layer normalization normalizes the feature dimension (not batch).
         # This stabilizes training by ensuring activations don't grow unbounded.
         self.ln_1 = nn.LayerNorm(config.n_embd, bias=config.bias)
-        self.attn = CausalSelfAttention(config)
+        self.attn = CausalSelfAttention(config, use_flash_attn=config.use_flash_attn)
         self.ln_2 = nn.LayerNorm(config.n_embd, bias=config.bias)
         self.ffn = FeedForward(config)
     
