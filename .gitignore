@@ -1,30 +1,92 @@
 # Python
 __pycache__/
 *.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
 *.egg-info/
-.env
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
 venv/
-markgpt-env/
+ENV/
+env/
+.venv
+.env
 
-# Model checkpoints (too large for git)
-checkpoints/*.pt
-checkpoints/*.bin
+# PyTorch & ML
+*.pt
+*.pth
+checkpoints/
+runs/
+wandb/
+*.onnx
+*.pb
 
-# Data files (too large for git; document sources instead)
-data/raw/*.txt
-data/raw/*.bin
+# Data
+data/raw/
 data/processed/*.bin
+*.csv
+*.tsv
+*.json
+!configs/*.json
+*.parquet
 
-# Notebooks checkpoints
+# Notebooks
 .ipynb_checkpoints/
+*.ipynb_checkpoints
 
 # IDEs
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.project
+.pydevproject
 
 # OS
-.DS_Store
 Thumbs.db
+.DS_Store
+.AppleDouble
+.LSOverride
 
-# Weights & Biases
-wandb/
+# Mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pytest
+.pytest_cache/
+htmlcov/
+.coverage
+.coverage.*
+
+# Black, ruff, pre-commit
+.ruff_cache/
+
+# Logs
+*.log
+*.logs
+
+# Temporary files
+tmp/
+temp/
+*.tmp
