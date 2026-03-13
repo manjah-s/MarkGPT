@@ -45,3 +45,41 @@ The model components form a flexible architecture:
 4. **Adaptation**: `lora.py` allows efficient fine-tuning of the model for specific tasks.
 
 Together, they create a powerful, adaptable language model system.
+
+## Usage Examples
+
+Here are some practical examples of how to use the model components:
+
+### Creating a MarkGPT Model
+
+```python
+from src.model.markgpt import MarkGPT
+
+model = MarkGPT(vocab_size=50000, embed_dim=512)
+```
+
+### Using Model Variants
+
+```python
+from src.model.markgpt_variants import get_variant
+
+small_model = get_variant('small')
+```
+
+### Applying LoRA
+
+```python
+from src.model.lora import apply_lora
+
+adapted_model = apply_lora(base_model, rank=8)
+```
+
+### With RoPE
+
+```python
+from src.model.rope import apply_rope
+
+positional_model = apply_rope(model)
+```
+
+These examples show how to build and customize the model.
