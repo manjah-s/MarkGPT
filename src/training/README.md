@@ -182,3 +182,14 @@ cleanup_distributed()
 ```
 
 These examples show how the components work together in practice.
+
+## Best Practices for Training
+
+- **Modular Code**: Keep training logic separated into components for easier debugging.
+- **Logging**: Always use logging to track progress and issues.
+- **Checkpointing**: Save checkpoints regularly to avoid losing progress.
+- **Distributed Training**: Use distributed training for large models to speed up training.
+- **Monitoring**: Monitor gradients and metrics to detect training problems early.
+- **Testing**: Test components individually before full training runs.
+
+Following these practices ensures efficient and reliable training.
