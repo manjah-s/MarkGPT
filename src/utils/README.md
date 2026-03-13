@@ -62,3 +62,49 @@ The utils components support the entire MarkGPT pipeline:
 5. **Analysis**: `vocab_analysis.py` provides insights into tokenization.
 
 These utilities are used across training, inference, and analysis phases, making the codebase more modular and maintainable.
+
+## Usage Examples
+
+Here are some practical examples of how to use the utils components:
+
+### Data Loading
+
+```python
+from src.utils.data_loader import get_data_loader
+
+loader = get_data_loader(dataset, batch_size=32)
+```
+
+### Evaluation
+
+```python
+from src.utils.evaluation import calculate_perplexity
+
+ppl = calculate_perplexity(model, test_data)
+```
+
+### Gradient Monitoring
+
+```python
+from src.utils.gradient_monitor import check_gradients
+
+issues = check_gradients(model)
+```
+
+### Model Factory
+
+```python
+from src.utils.model_factory import create_model
+
+model = create_model('markgpt', config)
+```
+
+### Vocab Analysis
+
+```python
+from src.utils.vocab_analysis import analyze_vocab
+
+stats = analyze_vocab(tokenizer)
+```
+
+These examples show how utils support various project needs.
