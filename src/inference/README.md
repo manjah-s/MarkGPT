@@ -25,3 +25,15 @@ The inference module is currently a foundation for future development:
 2. **Future Expansion**: This module will integrate with the model and tokenizer for text generation, evaluation, and deployment tasks.
 
 As the project evolves, this module will include utilities for efficient inference, batch processing, and model serving.
+
+## Usage Examples
+
+Currently, the inference module is a placeholder. Future usage might include:
+
+```python
+from src.inference import generate_text
+
+text = generate_text(model, tokenizer, prompt="Hello")
+```
+
+This will be expanded as inference features are developed.
