@@ -83,3 +83,13 @@ positional_model = apply_rope(model)
 ```
 
 These examples show how to build and customize the model.
+
+## Best Practices for Model Development
+
+- **Start Small**: Use smaller variants for initial experiments.
+- **Apply LoRA**: Use LoRA for efficient fine-tuning on specific tasks.
+- **Incorporate RoPE**: Always use RoPE for better positional encoding.
+- **Monitor Performance**: Track metrics during training to ensure stability.
+- **Version Models**: Save different versions for comparison.
+
+These practices help in developing robust models.
