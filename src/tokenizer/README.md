@@ -38,3 +38,35 @@ The tokenizer components work together in a pipeline:
 3. **Training/Update**: `training.py` can be used to improve the tokenizer on new datasets, updating the vocabulary or rules.
 
 This modular design allows the tokenizer to handle complex linguistic tasks while remaining flexible for different use cases.
+
+## Usage Examples
+
+Here are some practical examples of how to use the tokenizer components:
+
+### Basic Tokenization
+
+```python
+from src.tokenizer.tokenizer import Tokenizer
+
+tokenizer = Tokenizer()
+tokens = tokenizer.encode("Hello world")
+text = tokenizer.decode(tokens)
+```
+
+### Preprocessing Banso Text
+
+```python
+from src.tokenizer.banso_preprocess import preprocess_banso
+
+clean_text = preprocess_banso("raw banso text")
+```
+
+### Training Tokenizer
+
+```python
+from src.tokenizer.training import train_tokenizer
+
+new_tokenizer = train_tokenizer(dataset)
+```
+
+These examples demonstrate the tokenizer's role in text processing.
