@@ -46,3 +46,23 @@ Language models can be categorized in several ways:
 4. **Causal vs Masked**: Causal models are for generation, masked for understanding.
 
 Each type has its strengths and use cases.
+
+---
+
+## How Language Models Learn
+
+Language models learn by maximizing the likelihood of the training data. For a sequence, the model predicts each token given the previous ones, and the loss is the negative log probability of the correct token.
+
+Training involves:
+
+1. Tokenizing the text into subwords or words
+
+2. Converting tokens to embeddings
+
+3. Passing through the model (RNN, Transformer, etc.)
+
+4. Computing the loss
+
+5. Backpropagating to update parameters
+
+This process is repeated on millions of examples until the model converges.
