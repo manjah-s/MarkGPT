@@ -38,3 +38,15 @@ Turing was too careful a thinker to answer that question directly. Instead, he p
 The Turing Test was less a solution than a provocation. It shifted the question from the philosophical ("Can machines think?") to the operational ("Can a machine fool a person?"). This shift — from asking what intelligence *is* to asking what it *does* — would shape AI research for generations.
 
 **Takeaway for your journey:** When you eventually test MarkGPT and read its outputs, you will have a direct, personal sense of what this question means. Does it sound like something that understands? The answer is more complicated than a simple yes or no.
+
+---
+
+## 2. The First Wave: Symbolic AI (1950s–1980s)
+
+Early AI researchers were wildly optimistic. In 1956, a group of mathematicians and scientists met at Dartmouth College for a summer workshop that is considered the founding moment of AI as a field. They believed that within a generation, machines would be able to do everything a human mind could do.
+
+Their approach was called *symbolic AI* or *Good Old-Fashioned AI (GOFAI)*. The idea was elegant and logical: intelligence is fundamentally about manipulating symbols according to rules. To give a machine intelligence, you write down the rules explicitly. For language, this meant writing grammars — formal descriptions of which sentences are valid and what they mean.
+
+This produced genuinely impressive systems. Programs like ELIZA (1966) could carry on simple conversations. Expert systems in the 1970s and 80s could diagnose diseases with accuracy comparable to specialists, by encoding the rules doctors use into formal logic.
+
+But symbolic AI had a deep problem: **the world is too complicated for complete rule specification.** Language especially. Every rule has exceptions. Every grammar leaves out idioms, slang, poetry, sarcasm, and the endless creativity of human expression. The more rules researchers wrote, the more exceptions they discovered. The dream of capturing language in a rulebook slowly collapsed.
