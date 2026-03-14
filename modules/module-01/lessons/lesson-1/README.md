@@ -26,3 +26,15 @@ Now: can a machine do that?
 This question — whether a machine can understand, generate, or engage meaningfully with language — is the question that has driven artificial intelligence research for more than seventy years. And the answer, as of the 2020s, is: *sort of, and in ways that continue to astonish even the researchers who build these systems.*
 
 This lesson tells the story of how we got here.
+
+---
+
+## 1. The Beginning: Alan Turing and the Imitation Game (1950)
+
+The story of machine intelligence begins seriously in 1950 with a British mathematician named Alan Turing, who published a paper titled *"Computing Machinery and Intelligence."* It opens with a question that still echoes today: *"Can machines think?"*
+
+Turing was too careful a thinker to answer that question directly. Instead, he proposed a test — now called the *Turing Test* or the *Imitation Game* — in which a human judge conducts text-based conversations with both a human and a machine. If the judge cannot reliably distinguish the machine from the human, then for all practical purposes, the machine is demonstrating something that looks like intelligence.
+
+The Turing Test was less a solution than a provocation. It shifted the question from the philosophical ("Can machines think?") to the operational ("Can a machine fool a person?"). This shift — from asking what intelligence *is* to asking what it *does* — would shape AI research for generations.
+
+**Takeaway for your journey:** When you eventually test MarkGPT and read its outputs, you will have a direct, personal sense of what this question means. Does it sound like something that understands? The answer is more complicated than a simple yes or no.
