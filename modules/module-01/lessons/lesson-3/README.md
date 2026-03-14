@@ -33,3 +33,11 @@ Commercial LLMs are developed by tech companies and offered as APIs or hosted se
 - Gemini by Google: Multimodal capabilities, integrating text, image, and code
 
 These models set the benchmark for LLM capabilities but are proprietary and expensive to use at scale.
+
+---
+
+## Open-Source Alternatives
+
+Open-source LLMs provide transparency and customization options. Models like Llama, Mistral, and Falcon are freely available for research and commercial use.
+
+These models often lag behind commercial ones in performance but offer flexibility for fine-tuning and deployment. They are crucial for the democratization of AI.
