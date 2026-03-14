@@ -66,3 +66,13 @@ Training involves:
 5. Backpropagating to update parameters
 
 This process is repeated on millions of examples until the model converges.
+
+---
+
+## Evaluating Language Models
+
+Language models are evaluated using metrics like perplexity, which measures how well the model predicts the test data. Lower perplexity indicates better performance.
+
+Other metrics include BLEU for translation, ROUGE for summarization, and human evaluation for quality.
+
+Cross-entropy loss is also used during training to measure how well the model fits the data.
