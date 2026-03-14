@@ -96,3 +96,21 @@ Language models are used in many applications:
 - Summarization
 
 They power systems like GPT, BERT, and are integrated into search engines, email clients, and more.
+
+---
+
+## Challenges and Limitations
+
+Despite their power, language models have limitations:
+
+- They can generate biased or harmful content
+
+- They lack true understanding and reasoning
+
+- They require massive computational resources
+
+- They can hallucinate incorrect information
+
+- They struggle with long-term context
+
+Addressing these challenges is an active area of research.
