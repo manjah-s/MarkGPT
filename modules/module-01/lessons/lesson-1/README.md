@@ -84,3 +84,13 @@ But word embeddings were static — the word "bank" had the same representation 
 In 2018, two landmark models appeared. First, **ELMo** (from AllenNLP) showed that deep bidirectional language models produce powerful contextual representations. Second, and more transformatively, Google released **BERT** — a model built on a new architecture called the *Transformer* — that achieved state-of-the-art performance on nearly every language benchmark in a single paper.
 
 At the same time, OpenAI released the first **GPT** (Generative Pre-trained Transformer). Where BERT was built for understanding, GPT was built for generation: given some text, predict what comes next. This would become the paradigm for MarkGPT.
+
+---
+
+## 6. The Transformer Epoch (2017–Present)
+
+The Transformer architecture — introduced by Vaswani et al. in the 2017 paper "Attention Is All You Need" — is the most important architectural innovation in AI in decades. We will study it in extraordinary detail in Module 06, but here is the core idea:
+
+Instead of processing text word by word in sequence (as RNNs do), Transformers process all words simultaneously and let every word directly "attend to" every other word. This parallel processing is why Transformers can be scaled to enormous size and why they can be trained efficiently on modern hardware.
+
+GPT-2 (2019, 1.5 billion parameters), GPT-3 (2020, 175 billion parameters), and then ChatGPT (2022), Claude, Gemini, and Llama demonstrated that scaling up Transformer-based language models produces something that feels qualitatively different from anything before — systems that can write, reason, code, translate, summarize, and converse in ways that regularly surprise their creators.
