@@ -120,3 +120,18 @@ And MarkGPT has something the big models don't: it will know Banso. It will have
 **Transformer** — The specific architecture behind GPT, BERT, Claude, and MarkGPT. The subject of Module 06.
 
 **Pre-training and Fine-tuning** — First train a model on massive general text (pre-training), then adapt it to a specific domain or task (fine-tuning). This is exactly what you will do with MarkGPT.
+
+---
+
+## Exercises for Day 1
+
+The exercises are in `modules/module-01/exercises/day01_exercises.md`. Before you do them, sit with this question for five minutes:
+
+*What does it mean for a machine to "understand" a sentence? And does it matter whether the machine understands, if it responds helpfully?*
+
+Write three sentences on this in your journal. We will return to this question on Day 60, and your answer will very likely have changed.
+
+---
+
+*Next: Lesson 1.2 — What Is a Language Model?*
+*Continue to:* `modules/module-01/lessons/L01.2_what_is_a_language_model.md`
