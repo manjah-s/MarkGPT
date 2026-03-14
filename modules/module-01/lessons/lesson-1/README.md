@@ -50,3 +50,15 @@ Their approach was called *symbolic AI* or *Good Old-Fashioned AI (GOFAI)*. The 
 This produced genuinely impressive systems. Programs like ELIZA (1966) could carry on simple conversations. Expert systems in the 1970s and 80s could diagnose diseases with accuracy comparable to specialists, by encoding the rules doctors use into formal logic.
 
 But symbolic AI had a deep problem: **the world is too complicated for complete rule specification.** Language especially. Every rule has exceptions. Every grammar leaves out idioms, slang, poetry, sarcasm, and the endless creativity of human expression. The more rules researchers wrote, the more exceptions they discovered. The dream of capturing language in a rulebook slowly collapsed.
+
+---
+
+## 3. The Second Wave: Connectionism and Neural Networks (1980s–2000s)
+
+If the first wave tried to program intelligence from the top down (rules first, then behavior), the second wave tried to grow it from the bottom up (experience first, then behavior). This approach was inspired by the brain, not by logic.
+
+The key insight: rather than telling a machine what the rules are, show it thousands of examples and let it discover the patterns itself. This is called *learning*, and the structures that do it are called *artificial neural networks* — loosely inspired by biological neurons.
+
+The building blocks had been around since the 1950s, but two moments catalyzed the modern era. In 1986, David Rumelhart, Geoffrey Hinton, and Ronald Williams published the backpropagation algorithm — a method for efficiently training multi-layer neural networks. This was the key that had been missing.
+
+But even backpropagation wasn't enough at first. Networks were shallow and slow, data was limited, and computers weren't powerful enough. The 1990s were a "second winter" for neural networks — funding dried up, interest faded, and statistical methods like Support Vector Machines dominated.
